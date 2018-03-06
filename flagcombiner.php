@@ -40,26 +40,26 @@ $resources = array_reduce($files, function($resources, $file){
 // merge
 
 foreach($resources as $lft){
-	
+
 	foreach($resources as $rgt){
-		
-		$path = sprintf('%s/%s%s.png', $exportdir, $lft['name'], $rgt['name']);
-		
+
 		// short-circuit: do not change same picture to prevent distortion
+
 		if($lft['name'] === $rgt['name']){
 			$dest = $lft['src'];
 		}
-		
+
 		// pictures below the optimum size end up next to each other
+
 		elseif($lft['w'] + $rgt['w'] < $targetsize){
 			$dest = imagecreatetruecolor($lft['w'] + $rgt['w'], $lft['h']);
 			imagecopy($dest, $lft['src'], 0, 0, 0, 0,  $lft['w'], $lft['h']);
 			imagecopy($dest, $rgt['src'], $lft['w'], 0, 0, 0, $rgt['w'], $rgt['h']);
 		}
-		
+
 		// always align the right picture on the right side in the background; use left pircure as overlay
 		// left picture may fill up to the right one, but will not fall below the middle, except for the original size is lower
-		
+
 		else {
 			$dest = imagecreatetruecolor($targetsize, $lft['h']);
 			$rgt['x'] = $targetsize - $rgt['w'];
@@ -68,11 +68,14 @@ foreach($resources as $lft){
 			imagecopy($dest, $rgt['src'], $rgt['x'], $rgt['y'], 0, 0, $rgt['w'], $rgt['h']);
 			imagecopy($dest, $lft['src'], 0, 0, 0, 0, $lft['w'], $lft['h']);
 		}
-		
+
 		// store image
+
+		$path = sprintf('%s/%s%s.png', $exportdir, $lft['name'], $rgt['name']);
 		imagepng($dest, $path, 9);
-		
+
 		// make it overlap on a twisted angle
+
 		if($overlap){
 			$m = [];
 			$xmax = 20;
@@ -91,7 +94,7 @@ foreach($resources as $lft){
 			}
 		}
 	}
-	
+
 }
 
 exit('done');
