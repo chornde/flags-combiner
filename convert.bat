@@ -1,0 +1,1 @@
+for %%f in (*.svg) do ( "C:\Program Files (x86)\Inkscape\inkscape.exe" -z --export-background-opacity=1 --export-height=48 --export-png="%%~dpnf.png" --file="%%~f" )
